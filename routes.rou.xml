@@ -1,0 +1,175 @@
+<routes>
+        <vType id="typeCar" accel="3.000000" decel="5.000000" sigma="0.0" length="5" minGap="1" speedDev="0" maxSpeed="10.000000" guiShape="passenger"/>
+        <route id="WE" edges="wc ce" />
+        <route id="WN" edges="wc cn" />
+        <route id="WS" edges="wc cs" />
+        <route id="EW" edges="ec cw" />
+        <route id="EN" edges="ec cn" />
+        <route id="ES" edges="ec cs" />
+        <route id="NS" edges="nc cs" />
+        <route id="NE" edges="nc ce" />
+        <route id="NW" edges="nc cw" />
+        <route id="SN" edges="sc cn" />
+        <route id="SE" edges="sc ce" />
+        <route id="SW" edges="sc cw" />
+        
+    <vehicle id="A0" type="typeCar" route="WE" depart="0.000000" departSpeed="last"  />
+    <vehicle id="A1" type="typeCar" route="SN" depart="0.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="A2" type="typeCar" route="WE" depart="2.000000" departSpeed="last"  />
+    <vehicle id="A3" type="typeCar" route="SN" depart="2.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="A4" type="typeCar" route="WE" depart="4.000000" departSpeed="last"  />
+    <vehicle id="A5" type="typeCar" route="SN" depart="4.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="A6" type="typeCar" route="SN" depart="6.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="A7" type="typeCar" route="WE" depart="8.000000" departSpeed="last"  />
+    <vehicle id="A8" type="typeCar" route="SN" depart="8.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="A9" type="typeCar" route="WE" depart="10.000000" departSpeed="last"  />
+    <vehicle id="B10" type="typeCar" route="SN" depart="10.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B11" type="typeCar" route="WE" depart="12.000000" departSpeed="last"  />
+    <vehicle id="B12" type="typeCar" route="SN" depart="12.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B13" type="typeCar" route="WE" depart="14.000000" departSpeed="last"  />
+    <vehicle id="B14" type="typeCar" route="SN" depart="14.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B15" type="typeCar" route="WE" depart="16.000000" departSpeed="last"  />
+    <vehicle id="B16" type="typeCar" route="SN" depart="16.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B17" type="typeCar" route="SN" depart="18.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B18" type="typeCar" route="SN" depart="20.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="B19" type="typeCar" route="WE" depart="22.000000" departSpeed="last"  />
+    <vehicle id="C20" type="typeCar" route="SN" depart="22.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C21" type="typeCar" route="SN" depart="24.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C22" type="typeCar" route="WE" depart="26.000000" departSpeed="last"  />
+    <vehicle id="C23" type="typeCar" route="SN" depart="26.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C24" type="typeCar" route="SN" depart="28.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C25" type="typeCar" route="SN" depart="30.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C26" type="typeCar" route="WE" depart="32.000000" departSpeed="last"  />
+    <vehicle id="C27" type="typeCar" route="WE" depart="34.000000" departSpeed="last"  />
+    <vehicle id="C28" type="typeCar" route="SN" depart="34.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="C29" type="typeCar" route="SN" depart="36.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D30" type="typeCar" route="SN" depart="38.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D31" type="typeCar" route="WE" depart="40.000000" departSpeed="last"  />
+    <vehicle id="D32" type="typeCar" route="SN" depart="40.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D33" type="typeCar" route="WE" depart="42.000000" departSpeed="last"  />
+    <vehicle id="D34" type="typeCar" route="SN" depart="42.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D35" type="typeCar" route="WE" depart="44.000000" departSpeed="last"  />
+    <vehicle id="D36" type="typeCar" route="SN" depart="44.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D37" type="typeCar" route="WE" depart="46.000000" departSpeed="last"  />
+    <vehicle id="D38" type="typeCar" route="SN" depart="46.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="D39" type="typeCar" route="WE" depart="48.000000" departSpeed="last"  />
+    <vehicle id="E40" type="typeCar" route="SN" depart="48.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="E41" type="typeCar" route="WE" depart="50.000000" departSpeed="last"  />
+    <vehicle id="E42" type="typeCar" route="SN" depart="50.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="E43" type="typeCar" route="WE" depart="52.000000" departSpeed="last"  />
+    <vehicle id="E44" type="typeCar" route="WE" depart="54.000000" departSpeed="last"  />
+    <vehicle id="E45" type="typeCar" route="SN" depart="54.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="E46" type="typeCar" route="WE" depart="56.000000" departSpeed="last"  />
+    <vehicle id="E47" type="typeCar" route="SN" depart="56.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="E48" type="typeCar" route="WE" depart="58.000000" departSpeed="last"  />
+    <vehicle id="E49" type="typeCar" route="SN" depart="58.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F50" type="typeCar" route="SN" depart="60.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F51" type="typeCar" route="WE" depart="62.000000" departSpeed="last"  />
+    <vehicle id="F52" type="typeCar" route="SN" depart="62.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F53" type="typeCar" route="SN" depart="64.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F54" type="typeCar" route="WE" depart="66.000000" departSpeed="last"  />
+    <vehicle id="F55" type="typeCar" route="SN" depart="66.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F56" type="typeCar" route="WE" depart="68.000000" departSpeed="last"  />
+    <vehicle id="F57" type="typeCar" route="SN" depart="68.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="F58" type="typeCar" route="WE" depart="70.000000" departSpeed="last"  />
+    <vehicle id="F59" type="typeCar" route="SN" depart="72.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="G60" type="typeCar" route="WE" depart="74.000000" departSpeed="last"  />
+    <vehicle id="G61" type="typeCar" route="SN" depart="74.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="G62" type="typeCar" route="SN" depart="76.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="G63" type="typeCar" route="WE" depart="78.000000" departSpeed="last"  />
+    <vehicle id="G64" type="typeCar" route="SN" depart="78.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="G65" type="typeCar" route="WE" depart="80.000000" departSpeed="last"  />
+    <vehicle id="G66" type="typeCar" route="SN" depart="80.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="G67" type="typeCar" route="WE" depart="82.000000" departSpeed="last"  />
+    <vehicle id="G68" type="typeCar" route="WE" depart="84.000000" departSpeed="last"  />
+    <vehicle id="G69" type="typeCar" route="SN" depart="84.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H70" type="typeCar" route="SN" depart="86.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H71" type="typeCar" route="WE" depart="88.000000" departSpeed="last"  />
+    <vehicle id="H72" type="typeCar" route="SN" depart="88.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H73" type="typeCar" route="WE" depart="90.000000" departSpeed="last"  />
+    <vehicle id="H74" type="typeCar" route="SN" depart="90.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H75" type="typeCar" route="WE" depart="92.000000" departSpeed="last"  />
+    <vehicle id="H76" type="typeCar" route="SN" depart="92.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H77" type="typeCar" route="WE" depart="94.000000" departSpeed="last"  />
+    <vehicle id="H78" type="typeCar" route="SN" depart="94.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="H79" type="typeCar" route="SN" depart="96.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="I80" type="typeCar" route="WE" depart="100.000000" departSpeed="last"  />
+    <vehicle id="I81" type="typeCar" route="SN" depart="100.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="I82" type="typeCar" route="WE" depart="102.000000" departSpeed="last"  />
+    <vehicle id="I83" type="typeCar" route="SN" depart="102.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="I84" type="typeCar" route="WE" depart="104.000000" departSpeed="last"  />
+    <vehicle id="I85" type="typeCar" route="SN" depart="104.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="I86" type="typeCar" route="WE" depart="106.000000" departSpeed="last"  />
+    <vehicle id="I87" type="typeCar" route="SN" depart="106.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="I88" type="typeCar" route="WE" depart="108.000000" departSpeed="last"  />
+    <vehicle id="I89" type="typeCar" route="SN" depart="110.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="J90" type="typeCar" route="WE" depart="112.000000" departSpeed="last"  />
+    <vehicle id="J91" type="typeCar" route="SN" depart="112.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="J92" type="typeCar" route="WE" depart="116.000000" departSpeed="last"  />
+    <vehicle id="J93" type="typeCar" route="SN" depart="116.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="J94" type="typeCar" route="WE" depart="118.000000" departSpeed="last"  />
+    <vehicle id="J95" type="typeCar" route="SN" depart="118.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="J96" type="typeCar" route="WE" depart="120.000000" departSpeed="last"  />
+    <vehicle id="J97" type="typeCar" route="SN" depart="120.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="J98" type="typeCar" route="WE" depart="122.000000" departSpeed="last"  />
+    <vehicle id="J99" type="typeCar" route="SN" depart="122.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="K100" type="typeCar" route="WE" depart="124.000000" departSpeed="last"  />
+    <vehicle id="K101" type="typeCar" route="SN" depart="124.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="K102" type="typeCar" route="WE" depart="126.000000" departSpeed="last"  />
+    <vehicle id="K103" type="typeCar" route="WE" depart="130.000000" departSpeed="last"  />
+    <vehicle id="K104" type="typeCar" route="SN" depart="130.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="K105" type="typeCar" route="WE" depart="134.000000" departSpeed="last"  />
+    <vehicle id="K106" type="typeCar" route="SN" depart="134.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="K107" type="typeCar" route="WE" depart="136.000000" departSpeed="last"  />
+    <vehicle id="K108" type="typeCar" route="SN" depart="136.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="K109" type="typeCar" route="WE" depart="138.000000" departSpeed="last"  />
+    <vehicle id="L110" type="typeCar" route="SN" depart="138.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="L111" type="typeCar" route="WE" depart="140.000000" departSpeed="last"  />
+    <vehicle id="L112" type="typeCar" route="SN" depart="140.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="L113" type="typeCar" route="WE" depart="142.000000" departSpeed="last"  />
+    <vehicle id="L114" type="typeCar" route="WE" depart="144.000000" departSpeed="last"  />
+    <vehicle id="L115" type="typeCar" route="SN" depart="144.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="L116" type="typeCar" route="WE" depart="146.000000" departSpeed="last"  />
+    <vehicle id="L117" type="typeCar" route="SN" depart="146.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="L118" type="typeCar" route="WE" depart="148.000000" departSpeed="last"  />
+    <vehicle id="L119" type="typeCar" route="SN" depart="148.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M120" type="typeCar" route="SN" depart="150.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M121" type="typeCar" route="WE" depart="152.000000" departSpeed="last"  />
+    <vehicle id="M122" type="typeCar" route="SN" depart="152.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M123" type="typeCar" route="WE" depart="154.000000" departSpeed="last"  />
+    <vehicle id="M124" type="typeCar" route="SN" depart="154.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M125" type="typeCar" route="WE" depart="156.000000" departSpeed="last"  />
+    <vehicle id="M126" type="typeCar" route="SN" depart="156.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M127" type="typeCar" route="WE" depart="158.000000" departSpeed="last"  />
+    <vehicle id="M128" type="typeCar" route="SN" depart="158.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="M129" type="typeCar" route="WE" depart="160.000000" departSpeed="last"  />
+    <vehicle id="N130" type="typeCar" route="SN" depart="160.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="N131" type="typeCar" route="WE" depart="162.000000" departSpeed="last"  />
+    <vehicle id="N132" type="typeCar" route="SN" depart="164.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="N133" type="typeCar" route="WE" depart="166.000000" departSpeed="last"  />
+    <vehicle id="N134" type="typeCar" route="SN" depart="166.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="N135" type="typeCar" route="WE" depart="168.000000" departSpeed="last"  />
+    <vehicle id="N136" type="typeCar" route="SN" depart="168.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="N137" type="typeCar" route="SN" depart="170.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="N138" type="typeCar" route="WE" depart="172.000000" departSpeed="last"  />
+    <vehicle id="N139" type="typeCar" route="SN" depart="172.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O140" type="typeCar" route="SN" depart="174.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O141" type="typeCar" route="WE" depart="176.000000" departSpeed="last"  />
+    <vehicle id="O142" type="typeCar" route="SN" depart="176.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O143" type="typeCar" route="WE" depart="178.000000" departSpeed="last"  />
+    <vehicle id="O144" type="typeCar" route="SN" depart="178.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O145" type="typeCar" route="WE" depart="180.000000" departSpeed="last"  />
+    <vehicle id="O146" type="typeCar" route="SN" depart="180.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O147" type="typeCar" route="SN" depart="182.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="O148" type="typeCar" route="WE" depart="184.000000" departSpeed="last"  />
+    <vehicle id="O149" type="typeCar" route="SN" depart="184.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="P150" type="typeCar" route="SN" depart="186.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="P151" type="typeCar" route="WE" depart="188.000000" departSpeed="last"  />
+    <vehicle id="P152" type="typeCar" route="SN" depart="188.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="P153" type="typeCar" route="WE" depart="190.000000" departSpeed="last"  />
+    <vehicle id="P154" type="typeCar" route="SN" depart="190.000000" departSpeed="last"  color="1,0,0"/>
+    <vehicle id="P155" type="typeCar" route="WE" depart="192.000000" departSpeed="last"  />
+    <vehicle id="P156" type="typeCar" route="WE" depart="194.000000" departSpeed="last"  />
+    <vehicle id="P157" type="typeCar" route="WE" depart="196.000000" departSpeed="last"  />
+    <vehicle id="P158" type="typeCar" route="SN" depart="196.000000" departSpeed="last"  color="1,0,0"/>
+</routes>

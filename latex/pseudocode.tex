@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{chngpage}
+\setlength{\parindent}{2em}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{geometry}
+\geometry{a4paper,scale=0.75}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{enumerate}
+\setlength{\parindent}{2em}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{geometry}
+%\geometry{a4paper,scale=0.75}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[ruled]{algorithm2e}
+
+\begin{document}
+
+\begin{algorithm}[]  %其中这里面不能有H不然会报错，不过不影响结果
+	\caption{FIFO}%算法名字
+	\LinesNumbered %要求显示行号
+	\KwIn{input cars \emph{Cars}}%输入参数
+	\KwOut{clear queue \emph{Queue}} %输出
+	\If{new car drives in the control area}{
+        Push the new car into the Queue\;
+	}
+\end{algorithm}
+
+\begin{algorithm}[]  %其中这里面不能有H不然会报错，不过不影响结果
+	\caption{MS}%算法名字
+	\LinesNumbered %要求显示行号
+	\KwIn{input cars \emph{Cars}}%输入参数
+	\KwOut{clear queue \emph{Queue}} %输出
+    \emph{Queue} $\leftarrow$ []\;
+    \emph{NowDirection} $\leftarrow$ direction of the first car\;
+	\If{new car drives in the control area}{
+        \emph{car} $\leftarrow$ the new car \;
+        \emph{SNindex}$\leftarrow$ 0\;
+        \emph{WEindex}$\leftarrow$ 0\;
+        \eIf{car in SN road}{
+            \eIf{car is the first car of SNQueue}{
+                \emph{Time[car]} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+            }{
+                \emph{Time[car]} $\leftarrow$ \emph{Time[SNQueue.last]+delay}\; 
+                \emph{MaxTime} $\leftarrow$ \emph{DistanceToIntersection[car]/MinSpeed}\;
+                \emph{MinTime} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+                \emph{Time[car]} $\leftarrow$ max(Time[car],MinTime) \;
+                \emph{Time[car]} $\leftarrow$ min(Time[car],MaxTime) \;
+            }
+            Push car into SNQueue\;
+        }{
+            \emph{Time[car]} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+            }{
+                \emph{Time[car]} $\leftarrow$ \emph{Time[WEQueue.last]+delay}\; 
+                \emph{MaxTime} $\leftarrow$ \emph{DistanceToIntersection[car]/MinSpeed}\;
+                \emph{MinTime} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+                \emph{Time[car]} $\leftarrow$ max(Time[car],MinTime) \;
+                \emph{Time[car]} $\leftarrow$ min(Time[car],MaxTime) \;
+            }
+            Push car into WEQueue\;
+        }
+        \While{Queue.length$<$(SNQueue.length+WEQueue.length)}{
+            \eIf{NowDirection==SN or WEindex$\geq$WEQueue.length}{
+                \emph{Queue.push} $\leftarrow$ \emph{SNQueue[SNindex]}\;
+                SNindex++\;
+                \If{SNindex$<$SNQueue.length}{
+                    \If{Time[SNQueue[SNindex]]-Time[SNQueue[SNindex-1]]$>$4*delay and WEindex$<$WEQueue.length}{
+                        \emph{MaxTime} $\leftarrow$ \emph{DistanceToIntersection[WEQueue[WEindex]]/MinSpeed}\;
+                        \emph{MinTime} $\leftarrow$ \emph{DistanceToIntersection[WEQueue[WEindex]]/ReferenceSpeed}\;
+                        \If{MaxTime$>$Time[SNQueue[SNindex]]+2*delay and MinTime$<$Time[SNQueue[SNindex-1]+2*delay]}{
+                            NowDirection=WE \;
+                        }
+                    }
+                }
+            }{
+                \If{NowDirection==WE or SNindex$\geq$SNQueue.length}{
+                    \emph{Queue.push} $\leftarrow$ \emph{WEQueue[WEindex]}\;
+                    WEindex++\;
+                    \If{WEindex$<$WEQueue.length}{
+                        \If{Time[WEQueue[WEindex]]-Time[WEQueue[WEindex-1]]$>$4*delay and SNindex$<$SNQueue.length}{
+                            \emph{MaxTime} $\leftarrow$ \emph{DistanceToIntersection[SNQueue[SNindex]]/MinSpeed}\;
+                            \emph{MinTime} $\leftarrow$ \emph{DistanceToIntersection[SNQueue[SNindex]]/ReferenceSpeed}\;
+                            \If{MaxTime$>$Time[SNQueue[SNindex]]+2*delay and MinTime$<$Time[SNQueue[SNindex-1]+2*delay]}{
+                                \emph{NowDirection}=SN \;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+\end{algorithm}
+
+
+
+\begin{algorithm}[]  %其中这里面不能有H不然会报错，不过不影响结果
+	\caption{Time Calculation}%算法名字
+	\LinesNumbered %要求显示行号
+	\KwIn{clear queue \emph{Queue}}%输入参数
+	\KwOut{Time to intersection \emph{Time}} %输出
+    \emph{index}$\leftarrow$ 0\;
+	\For{car in Queue}{
+        \eIf{index==0}{
+            \emph{Time[Queue[index]]} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+        }{
+            \emph{MaxTime} $\leftarrow$ \emph{DistanceToIntersection[car]/MinSpeed}\;
+            \emph{MinTime} $\leftarrow$ \emph{DistanceToIntersection[car]/ReferenceSpeed}\;
+            \eIf{Queue[index-1].direction==Queue[index].direction}{
+                \emph{Time[Queue[index]]} $\leftarrow$ \emph{Time[Queue[index-1]]}+delay
+            }{
+                \emph{Time[Queue[index]]} $\leftarrow$ \emph{Time[Queue[[index-1]]}+delay*2
+            }
+            \emph{Time[Queue[index]]} $\leftarrow$ min(\emph{Time[Queue[index]],MaxTime})\;
+            \emph{Time[Queue[index]]} $\leftarrow$ max(\emph{Time[Queue[index]],MinTime})\;
+            
+        }
+	}
+\end{algorithm}
+\end{document}

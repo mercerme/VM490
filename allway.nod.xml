@@ -1,0 +1,10 @@
+<nodes> <!-- The opening tag -->
+
+
+  <node id="c" x="0.0" y="0.0" type="allway_stop"/> <!-- def. of node "1" --> <!-- type="priority" -->
+  <node id="n" x="0" y="200" type="unregulated"/> <!-- def. of node "2" -->
+  <node id="s" x="0.0" y="-200" type="unregulated"/> <!-- def. of node "3" -->
+  <node id="e" x="200" y="0" type="unregulated"/> <!-- def. of node "4" -->
+  <node id="w" x="-200" y="0.0" type="unregulated"/> <!-- def. of node "m1" -->
+
+</nodes> <!-- The closing tag -->
