@@ -406,7 +406,27 @@ class Queuing(object):
                 self.clearQueue=[]
                 self.EWindex=0
                 self.NSindex=0
-                self.now_direction=self.begin_direction
+                if self.NSindex<len(self.NSQueue):
+                    while self.NSQueue[self.NSindex] not in cars or traci.vehicle.getDistance(self.NSQueue[self.NSindex])>length_of_road:
+                        self.NSindex+=1
+                        if self.NSindex==len(self.NSQueue):
+                            break
+                if self.EWindex<len(self.EWQueue):
+                    while self.EWQueue[self.EWindex] not in cars or traci.vehicle.getDistance(self.EWQueue[self.EWindex])>length_of_road:
+                        self.EWindex+=1
+                        if self.EWindex==len(self.EWQueue):
+                            break
+                if self.NSindex==len(self.NSQueue):
+                    self.now_direction=1
+                elif self.EWindex==len(self.EWQueue):
+                    self.now_direction=0
+                else:
+                    if self.time[self.NSQueue[self.NSindex]]<self.time[self.EWQueue[self.EWindex]]:
+                        self.now_direction=1
+                    else:
+                        self.now_direction=0
+                self.EWindex=0
+                self.NSindex=0
                 curr_speed=traci.vehicle.getSpeed(car)
                 curr_pos=traci.vehicle.getDistance(car)
                 rt_dis=(self.refSpeed*self.refSpeed-curr_speed*curr_speed)/2/ACCEL
@@ -438,11 +458,13 @@ class Queuing(object):
                 while self.EWindex+self.NSindex<len(self.NSQueue)+len(self.EWQueue):
                     if self.NSindex<len(self.NSQueue):
                         while self.NSQueue[self.NSindex] not in cars or traci.vehicle.getDistance(self.NSQueue[self.NSindex])>length_of_road:
+                            self.clearQueue.append(self.NSQueue[self.NSindex])
                             self.NSindex+=1
                             if self.NSindex==len(self.NSQueue):
                                 break
                     if self.EWindex<len(self.EWQueue):
                         while self.EWQueue[self.EWindex] not in cars or traci.vehicle.getDistance(self.EWQueue[self.EWindex])>length_of_road:
+                            self.clearQueue.append(self.EWQueue[self.EWindex])
                             self.EWindex+=1
                             if self.EWindex==len(self.EWQueue):
                                 break
@@ -559,13 +581,11 @@ class Queuing(object):
                 print(car,file=f)
                 print("accl: "+ str(refAccl),file=f)
                 print("now speed:" + str(curr_speed),file=f)
-                #print("top_speed:" + str(self.topSpeed))
-                print("first term 1: " + str(traci.vehicle.getDistance(car)),file=f)
-               # print("second term: " + str(2 * (curr_speed - self.refSpeed) / STEP_SIZE))
+                print("time:" + str(self.time[index]),file=f)
+                print("distance: " + str(traci.vehicle.getDistance(car)),file=f)
                 print("number of cars: " + str(len(cars)),file=f)
                 print(" ",file=f)
-                #print(self.intDir)
-            #     dist / (dist / self.topSpeed + maxDelay)
+            self.time[car]=self.time[index]
             index+=1
             speeds[car] = refSpeed
             # Add random acceleration to the car.
@@ -865,8 +885,8 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
 
     for l in range(numRep):
 
-        for i in range(4,increment):
-            for j in range(4,increment):
+        for i in range(1,increment):
+            for j in range(1,increment):
 
                 print("REP %i, params (%0.3f, %0.3f)" % (l, i / increment, j / increment))
 

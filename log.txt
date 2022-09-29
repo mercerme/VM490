@@ -1,74 +1,21 @@
-***Starting server on port 13952 ***
-Loading net-file from 'net.net.xml' ... done (8ms).
+***Starting server on port 14898 ***
+Loading net-file from 'net.net.xml' ... done (4ms).
 Loading done.
-Simulation started with time: 0.00
-Warning: Vehicle 'D39'; collision with vehicle 'D37', lane='ce_0', gap=-0.10, time=80.90 stage=move.
-Warning: Vehicle 'E43'; collision with vehicle 'E41', lane='ce_0', gap=-0.10, time=84.90 stage=move.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=-10.00, offset=0.78), time=92.50.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=92.60.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=92.70.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=92.80.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=92.90.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.00.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.10.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.20.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.30.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.40.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.50.
-Warning: Vehicle 'D39' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.60.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=-8.60, offset=0.76), time=93.70.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.80.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=93.90.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.00.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.10.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.20.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.30.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.40.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.50.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.60.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.70.
-Warning: Vehicle 'D37' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=94.80.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=-10.00, offset=0.78), time=96.50.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=96.60.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=96.70.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=96.80.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=96.90.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.00.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.10.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.20.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.30.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.40.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.50.
-Warning: Vehicle 'E43' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.60.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=-8.60, offset=0.76), time=97.70.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.80.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=97.90.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.00.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.10.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.20.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.30.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.40.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.50.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.60.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.70.
-Warning: Vehicle 'E41' performs emergency stop at the end of lane 'ce_0' for unknown reasons (decel=2.70, offset=0.03), time=98.80.
-Simulation ended at time: 116.60
+Simulation ended at time: 0.00
 Performance: 
- Duration: 30.07s
- TraCI-Duration: 17.50s
- Real time factor: 3.8771
- UPS: 1334.973731
+ Duration: 3.47s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
 Vehicles: 
- Inserted: 71 (Loaded: 159)
- Running: 46
- Waiting: 23
-Teleports: 0 (Collisions: 2)
-Emergency Stops: 48
+ Inserted: 0 (Loaded: 2)
+ Running: 0
+ Waiting: 0
 Statistics (avg):
- RouteLength: 394.90
- Speed: 8.36
- Duration: 47.29
- WaitingTime: 0.02
- TimeLoss: 7.60
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
  DepartDelay: 0.00
 
