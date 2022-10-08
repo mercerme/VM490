@@ -422,9 +422,9 @@ class Queuing(object):
                     self.now_direction=0
                 else:
                     if self.time[self.NSQueue[self.NSindex]]<self.time[self.EWQueue[self.EWindex]]:
-                        self.now_direction=1
-                    else:
                         self.now_direction=0
+                    else:
+                        self.now_direction=1
                 self.EWindex=0
                 self.NSindex=0
                 curr_speed=traci.vehicle.getSpeed(car)
