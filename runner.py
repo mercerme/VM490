@@ -234,8 +234,8 @@ class FCFS(object):
             if curr_pos>length_of_road: # did not understand the compair 
                 index+=1
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
-                if refSpeed>self.topSpeed:
-                    refSpeed=self.topSpeed
+                if refSpeed>self.topSpeed*0.8:
+                    refSpeed=self.topSpeed*0.8
                 speeds[car] = refSpeed
                 continue
             elif index!=0:
@@ -907,8 +907,8 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
 
     for l in range(numRep):
 
-        for i in range(3,increment):
-            for j in range(3,increment):
+        for i in range(2,increment):
+            for j in range(2,increment):
 
                 print("REP %i, params (%0.3f, %0.3f)" % (l, i / increment, j / increment))
 
@@ -964,7 +964,7 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
                         if 'TimeLoss' in line:
                             break
                     avgTimeLoss = float(line[11:-1])
-                    timesLost[i,j,l] = avgTimeLoss-50#50=road_length/refspeed-road_length/topspeed
+                    timesLost[i,j,l] = avgTimeLoss-10#50=road_length/refspeed-road_length/topspeed
                     for line in lines:
                         if 'DepartDelay' in line:
                             break
@@ -1014,7 +1014,7 @@ if __name__ == "__main__":
     DECCEL = 5
     # the increments passed to repeatedParameterSweepTurning or
     # repeatedParameterSweep when running the simulation
-    INCREMENTS = 5
+    INCREMENTS = 3
     # the repetitions used by repeatedParameterSweepTurning or
     # repeatedParameterSweep when running the simulation
     REPS = 1
