@@ -187,7 +187,7 @@ class FCFS(object):
             return {}, {}
         speeds = {}
         modes = {}
-        length_of_road=190
+        length_of_road=190 #idk what is this used for
         current_default_interval = float(params["interval"])
         self.nowtime+=STEP_SIZE
         
@@ -227,10 +227,11 @@ class FCFS(object):
             # Total time spent should be STEP_SIZE * STEP
             # refPos = self.refSpeed * (self.driveTime[car] - self.delayTime[car])
             curr_pos=traci.vehicle.getDistance(car)
+            # use physic equation to calculate current distance, time and enter time 
             rt_dis=(self.refSpeed*self.refSpeed-curr_speed*curr_speed)/2/ACCEL
             rt_time=(self.refSpeed-curr_speed)/ACCEL
             now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
-            if curr_pos>length_of_road:
+            if curr_pos>length_of_road: # did not understand the compair 
                 index+=1
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
                 if refSpeed>self.topSpeed:
@@ -238,6 +239,7 @@ class FCFS(object):
                 speeds[car] = refSpeed
                 continue
             elif index!=0:
+                # calculate the new delay according to the direction
                 if 0:
                     newDelay=current_default_interval
                 elif 1:
@@ -283,6 +285,9 @@ class FCFS(object):
                 if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+curr_speed*curr_speed/2/DECCEL:
                     refSpeed=curr_speed-DECCEL*STEP_SIZE
             f=self.f
+            
+            # ??? this will not happen?
+            
             if  index<0:
                 print(index,file=f)
                 print("accl: "+ str(refAccl),file=f)
@@ -316,7 +321,7 @@ class FCFS(object):
 ########################
 # a class that implements queuing intersection control algorithm
 # NB: Does NOT work with turning traffic
-class Queuing(object):
+class MSO(object):
 
     def __init__(self, radius, topSpeed):
 
@@ -380,6 +385,7 @@ class Queuing(object):
         current_default_interval = float(params["interval"])
         existing_car_index=0
         self.nowtime+=STEP_SIZE
+        # distribute direction to each car
         for car in cars:
             if car not in self.intDirQ.keys():
                 strDir = cars[car][tc.VAR_ROUTE_ID]
@@ -416,6 +422,7 @@ class Queuing(object):
                         self.EWindex+=1
                         if self.EWindex==len(self.EWQueue):
                             break
+                # If no car, remain the direction 
                 if self.NSindex==len(self.NSQueue):
                     self.now_direction=1
                 elif self.EWindex==len(self.EWQueue):
@@ -429,9 +436,11 @@ class Queuing(object):
                 self.NSindex=0
                 curr_speed=traci.vehicle.getSpeed(car)
                 curr_pos=traci.vehicle.getDistance(car)
-                rt_dis=(self.refSpeed*self.refSpeed-curr_speed*curr_speed)/2/ACCEL
+                # use physic equation to calculate current distance, time and enter time 
+                rt_dis=(self.refSpeed * self.refSpeed - curr_speed * curr_speed)/2/ACCEL
                 rt_time=(self.refSpeed-curr_speed)/ACCEL
                 now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
+                # same as pesudocode
                 if self.intDirQ[car][0]%2==0:
                     self.frontcar[car]=self.cur_NS_car
                     self.cur_NS_car=car
@@ -439,7 +448,8 @@ class Queuing(object):
                     if len(self.NSQueue)==1:
                         self.time[car]=now_enter_time
                     else:
-                        self.time[car]=self.time[self.NSQueue[len(self.NSQueue)-2]]+current_default_interval/5
+                        # time is a dictionary to record how many time the car need to cross the intersection in the queue given by the value of the interval, which is a input parameter, and the value of the last two car in the queue
+                        self.time[car]=self.time[self.NSQueue[-2]]+current_default_interval/5
                         min_time=now_enter_time
                         self.time[car]=max(self.time[car],min_time)
                 else:
@@ -528,7 +538,7 @@ class Queuing(object):
             rt_time=(self.refSpeed-curr_speed)/ACCEL
             now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
             if curr_pos>length_of_road:
-                index+=1
+                index+=1 #为什么这里加1啊
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
                 if refSpeed>self.topSpeed:
                     refSpeed=self.topSpeed
@@ -569,14 +579,14 @@ class Queuing(object):
                 refAccl = ACCEL
             refSpeed = curr_speed + refAccl * STEP_SIZE
             if refSpeed>self.topSpeed*0.8:
-                refSpeed=self.topSpeed*0.8
+                refSpeed=self.topSpeed*0.8 #为啥是0.8
             if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
                refSpeed=self.refSpeed*dis_to_int/length_of_road
             if self.frontcar[car] in cars:
                 if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+curr_speed*curr_speed/2/DECCEL:
                     refSpeed=curr_speed-DECCEL*STEP_SIZE
             f=self.f
-            if index<10:
+            if index<10:#为啥是10
                 print(index,file=f)
                 print(car,file=f)
                 print("accl: "+ str(refAccl),file=f)
@@ -1052,14 +1062,15 @@ if __name__ == "__main__":
         "maxRandAcc": options.maxRandAcc,
     }
     json.dump( params, open( DATA_FOLDER+"/params.json", 'w' ) )
+    
 
 
     # initialize the current algorithm using the parameters
     # and some data about the network (see network info doc)
     # and run the correct set of simulations
 
-    if params["ALGO"] == "Q":
-        algo = Queuing(RADIUS, SPEED)
+    if params["ALGO"] == "MSO":
+        algo = MSO(RADIUS, SPEED)
 
     elif params["ALGO"] == "FCFS":
         algo = FCFS(RADIUS, PAD, SPEED)
