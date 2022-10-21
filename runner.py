@@ -11,6 +11,7 @@ import random
 import json
 import argparse
 from tkinter import NS
+from tracemalloc import start
 
 import numpy as np
 
@@ -149,10 +150,6 @@ class FCFS(object):
         self.topSpeed = topSpeed
 
         self.time={}
-        # dictionary of time cars are driven
-        self.driveTime = {}
-        # dictionary of delay time for the cars
-        self.delayTime = {} 
         # reference speed of the car
         self.refSpeed = self.topSpeed*0.8
         self.nowtime=0
@@ -162,7 +159,6 @@ class FCFS(object):
 
         self.f=open("car_log.txt",'wt')
         self.FCFS_queue=[]
-        self.generated_car_num=0
         self.frontcar={}
         self.cur_NS_car=0
         self.cur_WE_car=0
@@ -215,9 +211,11 @@ class FCFS(object):
                     self.frontcar[car]=self.cur_WE_car
                     self.cur_WE_car=car
         index=0
+        start_index=0
         for car in self.FCFS_queue:
             if car not in cars:
                 index+=1
+                start_index=index
                 continue
             if car == list(cars.keys())[0]:
                 pass
@@ -233,18 +231,19 @@ class FCFS(object):
             now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
             if curr_pos>length_of_road: # did not understand the compair 
                 index+=1
+                start_index=index
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
                 if refSpeed>self.topSpeed*0.8:
                     refSpeed=self.topSpeed*0.8
                 speeds[car] = refSpeed
                 continue
-            elif index!=0:
+            elif index>start_index:
                 # calculate the new delay according to the direction
                 if 0:
                     newDelay=current_default_interval
                 elif 1:
                     if self.intDir[index-1][0]==self.intDir[index][0]:
-                        newDelay=current_default_interval/2
+                        newDelay=current_default_interval/5
                     elif self.intDir[index-1][1]==self.intDir[index][1]:
                         newDelay=current_default_interval
                     elif self.intDir[index-1][0]-self.intDir[index-1][1]==1 or self.intDir[index-1][0]-self.intDir[index-1][1]==-3:
@@ -279,10 +278,16 @@ class FCFS(object):
             refSpeed = curr_speed + refAccl * STEP_SIZE
             if refSpeed>self.topSpeed*0.8:
                 refSpeed=self.topSpeed*0.8
-            if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
-               refSpeed=self.refSpeed*dis_to_int/length_of_road
+            dis_to_int=length_of_road-curr_pos
+            if dis_to_int>10:
+                if refSpeed<self.refSpeed*0.5:
+                    refSpeed=self.refSpeed*0.5
+            else:
+                if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
+                    refSpeed=self.refSpeed*(dis_to_int)/length_of_road
             if self.frontcar[car] in cars:
-                if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+curr_speed*curr_speed/2/DECCEL:
+                frontcar_speed=traci.vehicle.getSpeed(self.frontcar[car])
+                if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+(curr_speed*curr_speed-frontcar_speed*frontcar_speed)/2/DECCEL:
                     refSpeed=curr_speed-DECCEL*STEP_SIZE
             f=self.f
             
@@ -315,7 +320,7 @@ class FCFS(object):
         self.cur_WE_car=0
         self.time={}
         self.nowtime=0
-
+        self.time={}
 
 
 ########################
@@ -354,11 +359,9 @@ class MSO(object):
         self.EWindex=0
         self.NSindex=0
         self.nowtime=0
-        self.begin_direction=0
         self.frontcar={}
         self.cur_NS_car=0
         self.cur_WE_car=0
-
         self.resort=0
 
 
@@ -428,8 +431,6 @@ class MSO(object):
                 if strDir[1] == "S": dirTo = 2
                 if strDir[1] == "W": dirTo = 3
                 self.intDirQ[car] = (dirFrom, dirTo)
-                if existing_car_index==0:
-                    self.begin_direction=self.intDirQ[car][0]
             existing_car_index+=1
         existing_car_index=0
 
@@ -529,14 +530,14 @@ class MSO(object):
                             now_enter_time=(length_of_road-temp_curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
                             min_time=now_enter_time
                             if min_time<self.time[self.EWQueue[self.EWindex]]-current_default_interval:
-                                print("change")
+                                #print("change")
                                 self.now_direction=0
-                    
-            
+        start_index=0            
         # loop through the cars we are currently controlling 
         for car in self.clearQueue:
             if car not in cars:
                 index+=1
+                start_index=index
                 continue
             if car == list(cars.keys())[0]:
                 pass
@@ -550,17 +551,18 @@ class MSO(object):
             now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
             if curr_pos>length_of_road:
                 index+=1 #为什么这里加1啊
+                start_index=index
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
                 if refSpeed>self.refSpeed:
                     refSpeed=self.refSpeed
                 speeds[car] = refSpeed
                 continue
-            elif index!=0 :
+            elif index>start_index :
                 if 0:
                     newDelay=current_default_interval
                 elif 1:
                     if self.intDir[index-1][0]==self.intDir[index][0]:
-                        newDelay=current_default_interval/2
+                        newDelay=current_default_interval/5
                     elif self.intDir[index-1][1]==self.intDir[index][1]:
                         newDelay=current_default_interval
                     elif self.intDir[index-1][0]-self.intDir[index-1][1]==1 or self.intDir[index-1][0]-self.intDir[index-1][1]==-3:
@@ -591,19 +593,29 @@ class MSO(object):
             refSpeed = curr_speed + refAccl * STEP_SIZE
             if refSpeed>self.topSpeed*0.8:
                 refSpeed=self.topSpeed*0.8 #为啥是0.8
-            if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
-               refSpeed=self.refSpeed*dis_to_int/length_of_road
+            dis_to_int=length_of_road-curr_pos
+            if dis_to_int>10:
+                if refSpeed<self.refSpeed*0.5:
+                    refSpeed=self.refSpeed*0.5
+            else:
+                if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
+                    refSpeed=self.refSpeed*(dis_to_int)/length_of_road
+            # if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
+            #    refSpeed=self.refSpeed*dis_to_int/length_of_road
             if self.frontcar[car] in cars:
-                if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+curr_speed*curr_speed/2/DECCEL:
+                frontcar_speed=traci.vehicle.getSpeed(self.frontcar[car])
+                if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+(curr_speed*curr_speed-frontcar_speed*frontcar_speed)/2/DECCEL:
                     refSpeed=curr_speed-DECCEL*STEP_SIZE
             f=self.f
-            if index<30:#为啥是10
+            if index<0:#为啥是10
                 print(index,file=f)
                 print(car,file=f)
                 print("now_enter_time:"+str(now_enter_time),file=f)
                 print("accl: "+ str(refAccl),file=f)
                 print("now speed:" + str(curr_speed),file=f)
                 print("time:" + str(self.time[index]),file=f)
+                if index>0:
+                    print("front_car_time:"+str(self.time[index-1]),file=f)
                 print("distance: " + str(traci.vehicle.getDistance(car)),file=f)
                 print("number of cars: " + str(len(cars)),file=f)
                 print(" ",file=f)
@@ -626,7 +638,11 @@ class MSO(object):
         self.frontcar={}
         self.cur_NS_car=0
         self.cur_WE_car=0
-
+        self.now_direction=0
+        self.EWindex=0
+        self.NSindex=0
+        self.nowtime=0
+        self.resort=0
 
 ########################
 # dummy class for the intersection control algorithm
@@ -657,7 +673,6 @@ def drive(car, targetSpeed, mode):
 
     # make sure the target speed does not accede the allowed speed for that road
     targetSpeed = min(targetSpeed, traci.vehicle.getAllowedSpeed(car))
-    print(targetSpeed, traci.vehicle.getAllowedSpeed(car))
     if mode == 6:
         # depending on if the car is faster or slower than the target speed 
         # either accelerate or decelerate
@@ -827,8 +842,8 @@ def repeatedParameterSweep(algo, increment, numRep, N, show = True):
     # repeat for number of repetitions
     for l in range(numRep):
         # sweep over the grid of traffic densities
-        for i in range(1, increment):
-            for j in range(1, increment):
+        for i in range(9, increment):
+            for j in range(9, increment):
 
                 print("REP %i, params (%0.3f, %0.3f)" % (l, i / increment, j / increment))
 
@@ -877,11 +892,11 @@ def repeatedParameterSweep(algo, increment, numRep, N, show = True):
     if show:
         for l in range(numRep):
             print(timesLost[:, :, l])
-
+        tick_=np.argange(0,100,10).astype(float)
         ticklabels = [i / increment for i in range(increment)]
         timesLost = np.sum(timesLost, axis=2) / numRep
         timesLost = np.flip(timesLost, axis=0)
-        ax = sns.heatmap(timesLost, xticklabels = ticklabels, yticklabels = ticklabels[::-1], cbar_kws={'label':'avg time lost per trip (seconds)'})
+        ax = sns.heatmap(timesLost, xticklabels = ticklabels, yticklabels = ticklabels[::-1],cbar_kws={'label':'avg time lost per trip (seconds)',"ticks":tick_})
         plt.xlabel("Prob of car arrival in east/west direction each timestep")
         plt.ylabel("Prob of car arrival in north/south direction each timestep")
         plt.show()
@@ -907,8 +922,8 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
 
     for l in range(numRep):
 
-        for i in range(2,increment):
-            for j in range(2,increment):
+        for i in range(5,increment):
+            for j in range(5,increment):
 
                 print("REP %i, params (%0.3f, %0.3f)" % (l, i / increment, j / increment))
 
@@ -964,7 +979,7 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
                         if 'TimeLoss' in line:
                             break
                     avgTimeLoss = float(line[11:-1])
-                    timesLost[i,j,l] = avgTimeLoss-10#50=road_length/refspeed-road_length/topspeed
+                    timesLost[i,j,l] = avgTimeLoss-10#10=road_length/refspeed-road_length/topspeed
                     for line in lines:
                         if 'DepartDelay' in line:
                             break
@@ -975,11 +990,11 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
     if show:
         for l in range(numRep):
             print(timesLost[:, :, l])
-
+#, "ticks":np.arange(0,90,10)
         ticklabels = [i / increment for i in range(increment)]
         timesLost = np.sum(timesLost, axis=2) / numRep
         timesLost = np.flip(timesLost, axis=0)
-        ax = sns.heatmap(timesLost, xticklabels = ticklabels, yticklabels = ticklabels[::-1], annot=True, cbar_kws={'label':'avg time lost per trip (seconds)'})
+        ax = sns.heatmap(timesLost, xticklabels = ticklabels, yticklabels = ticklabels[::-1], vmin=10,vmax=85,annot=True,  cmap=plt.get_cmap('RdYlGn_r'),cbar_kws={'label':'avg time lost per trip (seconds)'})
         plt.xlabel("Prob of car arrival in east/west direction each timestep")
         plt.ylabel("Prob of car arrival in north/south direction each timestep")
         plt.show()
@@ -1014,7 +1029,7 @@ if __name__ == "__main__":
     DECCEL = 5
     # the increments passed to repeatedParameterSweepTurning or
     # repeatedParameterSweep when running the simulation
-    INCREMENTS = 3
+    INCREMENTS = 10
     # the repetitions used by repeatedParameterSweepTurning or
     # repeatedParameterSweep when running the simulation
     REPS = 1
