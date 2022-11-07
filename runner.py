@@ -472,6 +472,7 @@ class MSO(object):
         if self.resort==1:
             self.resort=0
             self.clearQueue=[]
+            print("***Now reassign both index to zero!***")
             self.EWindex=0
             self.NSindex=0
             while self.EWindex+self.NSindex<len(self.NSQueue)+len(self.EWQueue):
@@ -493,6 +494,8 @@ class MSO(object):
                     # print(self.EWindex)
                     # print(self.EWQueue)
                     # print(self.clearQueue)
+                    print("NSindex=",self.NSindex,";EWindex=",self.EWindex)
+                    print("NSQueue length=",len(self.NSQueue),"EWQueue length=",len(self.EWQueue))
                     self.intDir[len(self.clearQueue)]=self.intDirQ[self.NSQueue[self.NSindex]]
                     self.clearQueue.append(self.NSQueue[self.NSindex])
                     self.NSindex+=1
@@ -550,7 +553,7 @@ class MSO(object):
             rt_time=(self.refSpeed-curr_speed)/ACCEL
             now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
             if curr_pos>length_of_road:
-                index+=1 #为什么这里加1啊
+                index+=1 
                 start_index=index
                 refSpeed=curr_speed+ACCEL*STEP_SIZE
                 if refSpeed>self.refSpeed:
@@ -592,7 +595,7 @@ class MSO(object):
                 refAccl = ACCEL
             refSpeed = curr_speed + refAccl * STEP_SIZE
             if refSpeed>self.topSpeed*0.8:
-                refSpeed=self.topSpeed*0.8 #为啥是0.8
+                refSpeed=self.topSpeed*0.8 
             dis_to_int=length_of_road-curr_pos
             if dis_to_int>10:
                 if refSpeed<self.refSpeed*0.5:
@@ -607,7 +610,7 @@ class MSO(object):
                 if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+(curr_speed*curr_speed-frontcar_speed*frontcar_speed)/2/DECCEL:
                     refSpeed=curr_speed-DECCEL*STEP_SIZE
             f=self.f
-            if index<0:#为啥是10
+            if index<0:
                 print(index,file=f)
                 print(car,file=f)
                 print("now_enter_time:"+str(now_enter_time),file=f)
@@ -624,6 +627,371 @@ class MSO(object):
             speeds[car] = refSpeed
             # Add random acceleration to the car.
             #speeds[car] += random.uniform(-float(params["maxRandAcc"]), float(params["maxRandAcc"]))
+        return speeds, modes
+    ####################
+    # method to reset the instance after a run of the simulation
+    def reset(self):
+        self.clearQueue = []
+        self.intDir = {}
+        self.intDirQ={}
+        self.EWQueue = []
+        self.NSQueue = []
+        self.last_dir=[]
+        self.frontcar={}
+        self.cur_NS_car=0
+        self.cur_WE_car=0
+        self.now_direction=0
+        self.EWindex=0
+        self.NSindex=0
+        self.nowtime=0
+        self.resort=0
+
+class LQF(object):
+    def __init__(self, radius, topSpeed):
+
+            # the radius of traffic that the algorithm controls
+            self.radius = radius
+
+            # top speed of cars on the road
+            self.topSpeed = topSpeed
+
+            # reference speed of the car
+            self.refSpeed = self.topSpeed*0.8
+            
+            # dictionary of direction pair stored in Int.
+            self.intDir = {}
+
+            self.intDirQ={}
+
+            self.EWQueue = []
+            # the queue of cars approaching the intersection from the north and south
+            self.NSQueue = []
+            # the direction of last queue
+            
+
+
+            self.clearQueue = []
+            # the queue of cars approaching the intersection from the east and west
+            self.f=open("car_log.txt",'wt')
+            #direction=0 NS, 1 EW
+            self.now_direction=0
+            self.time={}
+            self.EWindex=0
+            self.NSindex=0
+            self.nowtime=0
+            self.frontcar={}
+            self.cur_NS_car=0
+            self.cur_WE_car=0
+            self.resort=0
+            # the number of cars will queue at this circle
+            self.NSQueueNum=0
+            self.EWQueueNum=0
+
+
+
+
+    ##########################
+    # function to control the cars for the next time step
+    # input
+    #  - cars: the dictionary of cars from the junction subscription
+    #          includes the lane position, road id, route id, and speed for each car.
+    #  - step: the current simulation time step
+    #
+    # output
+    #  - speeds: a dictionary of cars and the speeds they should be set to
+    #  - modes : a dictionary of cars and the driving function speed modes they should be set to
+    def controlNextStep(self, cars, step,vehnum):
+        if not cars:
+            init_steps = {}  ## used for recording the initial time step when the car is generated.
+            return {}, {}
+
+        speeds = {}
+        modes = {}
+        index=0
+        length_of_road=190
+        current_default_interval = float(params["interval"])
+        existing_car_index=0
+        self.nowtime+=STEP_SIZE
+        # distribute direction to each car
+
+        self.EWindex=0
+        self.NSindex=0
+        if self.NSindex<len(self.NSQueue):
+            while self.NSQueue[self.NSindex] not in cars or traci.vehicle.getDistance(self.NSQueue[self.NSindex])>length_of_road:
+                self.NSindex+=1
+                if self.NSindex==len(self.NSQueue):
+                    break
+        if self.EWindex<len(self.EWQueue):
+            while self.EWQueue[self.EWindex] not in cars or traci.vehicle.getDistance(self.EWQueue[self.EWindex])>length_of_road:
+                self.EWindex+=1
+                if self.EWindex==len(self.EWQueue):
+                    break
+        # If only one car, remain the direction 
+        if self.NSindex==len(self.NSQueue):
+            self.now_direction=1
+        elif self.EWindex==len(self.EWQueue):
+            self.now_direction=0
+        else:
+            # print(self.NSQueue[self.NSindex])
+            # print(self.time[self.NSQueue[self.NSindex]])
+            # print(self.EWQueue[self.EWindex])
+            # print(self.time[self.EWQueue[self.EWindex]])
+            if self.time[self.NSQueue[self.NSindex]]<self.time[self.EWQueue[self.EWindex]]:
+                self.now_direction=0
+            else:
+                self.now_direction=1
+                    
+        for car in cars:
+            if car not in self.intDirQ.keys():
+                strDir = cars[car][tc.VAR_ROUTE_ID]
+                dirFrom = dirTo = 0
+                if strDir[0] == "N": dirFrom = 0
+                if strDir[0] == "E": dirFrom = 1
+                if strDir[0] == "S": dirFrom = 2
+                if strDir[0] == "W": dirFrom = 3
+                if strDir[1] == "N": dirTo = 0
+                if strDir[1] == "E": dirTo = 1
+                if strDir[1] == "S": dirTo = 2
+                if strDir[1] == "W": dirTo = 3
+                self.intDirQ[car] = (dirFrom, dirTo)
+            existing_car_index+=1
+        existing_car_index=0
+        
+
+
+        for car in cars:
+            if car not in self.NSQueue and car not in self. EWQueue:
+                self.resort=1
+                curr_speed=traci.vehicle.getSpeed(car)
+                curr_pos=traci.vehicle.getDistance(car)
+                # use physic equation to calculate current distance, time and enter time 
+                rt_dis=(self.refSpeed * self.refSpeed - curr_speed * curr_speed)/2/ACCEL
+                rt_time=(self.refSpeed-curr_speed)/ACCEL
+                now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
+                # same as pesudocode
+                if self.intDirQ[car][0]%2==0:
+                    self.frontcar[car]=self.cur_NS_car
+                    self.cur_NS_car=car
+                    self.NSQueue.append(car)
+                    if len(self.NSQueue)==1:
+                        self.time[car]=now_enter_time
+                    else:
+                        # time is a dictionary to record how many time the car need to cross the intersection in the queue given by the value of the interval, which is a input parameter, and the value of the last two car in the queue
+                        self.time[car]=self.time[self.NSQueue[-2]]+current_default_interval/5
+                        min_time=now_enter_time
+                        self.time[car]=max(self.time[car],min_time)
+                else:
+                    self.EWQueue.append(car)
+                    self.frontcar[car]=self.cur_WE_car
+                    self.cur_WE_car=car
+                    if len(self.EWQueue)==1:
+                        self.time[car]=now_enter_time
+                    else:
+                        self.time[car]=self.time[self.EWQueue[len(self.EWQueue)-2]]+current_default_interval/5
+                        min_time=now_enter_time
+                        self.time[car]=max(self.time[car],min_time)
+                # print(car, self.intDirQ[car])
+                # print(self.NSQueue)
+                # print(self.EWQueue)
+
+        if self.resort==1:
+            self.resort=0
+            self.clearQueue=[]
+            print("***Now reassign both index to zero!***")
+            self.EWindex=0
+            self.NSindex=0
+            
+            while self.EWindex+self.NSindex<len(self.NSQueue)+len(self.EWQueue):
+                self.NSQueueNum =0
+                self.EWQueueNum =0
+                for i in range(len(self.NSQueue)):
+                    # print("-----(ns) constant=",length_of_road/2-10,"; getdist= ", traci.vehicle.getDistance(self.NSQueue[i]),"---- for ",i)
+                    if  self.NSQueue[i] in cars and traci.vehicle.getDistance(self.NSQueue[i])<190:
+                        
+                        self.NSQueueNum+=1
+                for i in range(len(self.EWQueue)):
+                    # print("-----(ew) constant=",length_of_road/2-10,"; getdist= ", traci.vehicle.getDistance(self.EWQueue[i]),"---- for ",i)
+                    if self.EWQueue[i] in cars and traci.vehicle.getDistance(self.EWQueue[i])<190:
+                        self.EWQueueNum+=1
+                print("#### NS waiting=",self.NSQueueNum,";EW waiting=",self.EWQueueNum)
+                # print("Into loop")
+                # Sort the cars that were driven away to clearQueue
+                if self.NSindex<len(self.NSQueue):
+                    # if  self.NSQueue[self.NSindex] in cars and traci.vehicle.getDistance(self.NSQueue[self.NSindex])<length_of_road/2-10:
+                    #     self.NSQueueNum+=1
+                    while self.NSQueue[self.NSindex] not in cars or traci.vehicle.getDistance(self.NSQueue[self.NSindex])>length_of_road:
+                        self.clearQueue.append(self.NSQueue[self.NSindex])
+                        self.NSindex+=1
+                        if self.NSindex==len(self.NSQueue):
+                            break
+                if self.EWindex<len(self.EWQueue):   
+                    # if self.EWQueue[self.EWindex] in cars and traci.vehicle.getDistance(self.EWQueue[self.EWindex])<length_of_road/2-10:
+                    #     self.EWQueueNum+=1
+                    while self.EWQueue[self.EWindex] not in cars or traci.vehicle.getDistance(self.EWQueue[self.EWindex])>length_of_road:
+                        self.clearQueue.append(self.EWQueue[self.EWindex])
+                        self.EWindex+=1
+                        if self.EWindex==len(self.EWQueue):
+                            break
+
+                # determine which direction to set off the car
+                if self.now_direction%2==0 or self.EWindex>=len(self.EWQueue):
+                    # print("NSindex=",self.NSindex)
+                    # print("EWindex=",self.EWindex)
+                    # print("EWQueue length=",len(self.EWQueue))
+                    # print("NSQueue length=",len(self.NSQueue))
+                    # print("Clearqueue=", self.clearQueue)
+                    # print()
+                    #if len(self.NSQueue)>self.NSindex:
+                    print("NSindex=",self.NSindex,";EWindex=",self.EWindex)
+                    print("NSQueue length=",len(self.NSQueue),"EWQueue length=",len(self.EWQueue))
+                    self.intDir[len(self.clearQueue)]=self.intDirQ[self.NSQueue[self.NSindex]]
+                    self.clearQueue.append(self.NSQueue[self.NSindex])
+                    self.NSindex+=1
+                    
+                    if self.NSindex==len(self.NSQueue):
+                        self.now_direction=1
+                        continue 
+                    
+                    # if self.NSQueueNum<self.EWQueueNum and traci.vehicle.getDistance(self.EWQueue[self.EWindex-1])>200:
+                    #     self.now_direction=1
+                    #     continue
+                    # if self.NSQueueNum==self.EWQueueNum and traci.vehicle.getDistance(self.EWQueue[self.EWindex-1])>200:
+                    #     self.now_direction=1
+                elif self.now_direction%2==1 or self.NSindex>=len(self.NSQueue):
+                    #if len(self.EWQueue)>self.EWindex:
+                    self.intDir[len(self.clearQueue)]=self.intDirQ[self.EWQueue[self.EWindex]]
+                    self.clearQueue.append(self.EWQueue[self.EWindex])
+                    self.EWindex+=1
+                    
+                    if self.EWindex==len(self.EWQueue):
+                        self.now_direction=0
+                        continue
+                    
+                    # if self.EWQueueNum<self.NSQueueNum and traci.vehicle.getDistance(self.NSQueue[self.NSindex-1])>200:
+                    #     self.now_direction=0
+                    #     continue
+                    # if self.EWQueueNum==self.NSQueueNum and traci.vehicle.getDistance(self.NSQueue[self.NSindex-1])>200:
+                    #     self.now_direction=0
+                        
+        start_index=0            
+        # loop through the cars we are currently controlling 
+        for car in self.clearQueue:
+            if car not in cars:
+                index+=1
+                start_index=index
+                continue
+            if car == list(cars.keys())[0]:
+                pass
+            self.intDir[index]=self.intDirQ[car]
+            # Always consider the delaySpeed of the cars at all timeSteps.
+            curr_speed = traci.vehicle.getSpeed(car)
+            newDelay=0
+            curr_pos=traci.vehicle.getDistance(car)
+            rt_dis=(self.refSpeed*self.refSpeed-curr_speed*curr_speed)/2/ACCEL
+            rt_time=(self.refSpeed-curr_speed)/ACCEL
+            now_enter_time=(length_of_road-curr_pos-rt_dis)/self.refSpeed+self.nowtime+rt_time
+            if curr_pos>length_of_road:
+                index+=1 
+                start_index=index
+                refSpeed=curr_speed+ACCEL*STEP_SIZE
+                if refSpeed>self.refSpeed:
+                    refSpeed=self.refSpeed
+                speeds[car] = refSpeed
+                continue
+            elif index>start_index :
+                if 0:
+                    newDelay=current_default_interval
+                elif 1:
+                    if self.intDir[index-1][0]==self.intDir[index][0]:
+                        newDelay=current_default_interval/5
+                    elif self.intDir[index-1][1]==self.intDir[index][1]:
+                        newDelay=current_default_interval
+                    elif self.intDir[index-1][0]-self.intDir[index-1][1]==1 or self.intDir[index-1][0]-self.intDir[index-1][1]==-3:
+                        newDelay=current_default_interval * 2 / 3
+                    elif self.intDir[index-1][0]-self.intDir[index-1][1]==-1 or self.intDir[index-1][0]-self.intDir[index-1][1]==3:
+                        newDelay=current_default_interval
+                    elif self.intDir[index-1][0]==self.intDir[index][1] and self.intDir[index-1][1]==self.intDir[index][0]:
+                        if (self.intDir[index-1][1]-self.intDir[index-1][0])%2==0:
+                            newDelay=current_default_interval / 5
+                        else:
+                            newDelay=current_default_interval*2/3
+                    else :
+                        newDelay=current_default_interval
+                self.time[index]=self.time[index-1]+newDelay
+            else:
+                self.time[index]=now_enter_time
+
+            if curr_pos<length_of_road:
+                dis_to_int=length_of_road-curr_pos
+                min_time=now_enter_time
+                #print(max_time,min_time,ref_to_int_time)
+                if self.time[index]<min_time:
+                    self.time[index]=min_time
+            if self.time[index] > now_enter_time:
+                refAccl = -DECCEL
+            else:
+                refAccl = ACCEL
+            refSpeed = curr_speed + refAccl * STEP_SIZE
+            if refSpeed>self.topSpeed*0.8:
+                refSpeed=self.topSpeed*0.8 
+            dis_to_int=length_of_road-curr_pos
+            if dis_to_int>10:
+                if refSpeed<self.refSpeed*0.5:
+                    refSpeed=self.refSpeed*0.5
+            else:
+                if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
+                    refSpeed=self.refSpeed*(dis_to_int)/length_of_road
+            # if refSpeed<self.refSpeed*(dis_to_int)/length_of_road:
+            #    refSpeed=self.refSpeed*dis_to_int/length_of_road
+            if self.frontcar[car] in cars:
+                frontcar_speed=traci.vehicle.getSpeed(self.frontcar[car])
+                if traci.vehicle.getDistance(self.frontcar[car])-curr_pos<7+(curr_speed*curr_speed-frontcar_speed*frontcar_speed)/2/DECCEL:
+                    refSpeed=curr_speed-DECCEL*STEP_SIZE
+            
+            if self.frontcar[car] in cars:
+                leadFlag = traci.vehicle.getDistance(self.frontcar[car]) > length_of_road and curr_pos < length_of_road-7
+                # current car before the cross, front car ahead the cross
+                # meaning: this is the leading car just before the cross. 7 is length of car
+                # only need to deacc this leading car
+            else:
+                leadFlag = self.frontcar[car] not in cars # no car front it, of course leading.
+
+            
+            if self.intDirQ[car][0] % 2 == 0 and leadFlag: # NS
+                if self.EWQueueNum > self.NSQueueNum and length_of_road-curr_pos <20:
+                    refSpeed=curr_speed-DECCEL*STEP_SIZE
+                else:
+                    refSpeed=curr_speed+ACCEL*STEP_SIZE
+            elif self.intDirQ[car][0] % 2 == 1 and leadFlag: # EW
+                if self.EWQueueNum < self.NSQueueNum and length_of_road-curr_pos <20:
+                    refSpeed=curr_speed-DECCEL*STEP_SIZE
+                else:
+                    refSpeed=curr_speed+ACCEL*STEP_SIZE
+            f=self.f
+            if index<0:
+                print(index,file=f)
+                print(car,file=f)
+                print("now_enter_time:"+str(now_enter_time),file=f)
+                print("accl: "+ str(refAccl),file=f)
+                print("now speed:" + str(curr_speed),file=f)
+                print("time:" + str(self.time[index]),file=f)
+                if index>0:
+                    print("front_car_time:"+str(self.time[index-1]),file=f)
+                print("distance: " + str(traci.vehicle.getDistance(car)),file=f)
+                print("number of cars: " + str(len(cars)),file=f)
+                print(" ",file=f)
+            self.time[car]=self.time[index]
+            index+=1
+            speeds[car] = refSpeed
+            # if self.EWQueueNum > self.NSQueueNum:
+            #     for i in range(len(self.NSQueue)):
+            #         speeds[self.NSQueue[i]] = speeds[self.NSQueue[i]]-DECCEL*STEP_SIZE
+            # if self.EWQueueNum > self.NSQueueNum:
+            #     for i in range(len(self.NSQueue)):
+            #         speeds[self.EWQueue[i]] = speeds[self.EWQueue[i]]-DECCEL*STEP_SIZE
+
+            # Add random acceleration to the car.
+            # speeds[car] += random.uniform(-float(params["maxRandAcc"]), float(params["maxRandAcc"]))
         return speeds, modes
 
     ####################
@@ -643,7 +1011,9 @@ class MSO(object):
         self.NSindex=0
         self.nowtime=0
         self.resort=0
-
+    
+        
+        
 ########################
 # dummy class for the intersection control algorithm
 # NB: Use as a placeholder when testing SUMO defaults
@@ -656,6 +1026,8 @@ class Unsupervised(object):
 
     def reset(self):
         pass
+
+
 
 
 ##########################
@@ -810,7 +1182,8 @@ def get_options():
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
     #optParser.add_option("--algo", type=str, help="control algorithm for the intersectino", default="FCFS")
-    optParser.add_option("--algo", type=str, help="control algorithm for the intersectino", default="MSO")
+    # optParser.add_option("--algo", type=str, help="control algorithm for the intersectino", default="MSO")
+    optParser.add_option("--algo", type=str, help="control algorithm for the intersectino", default="LQF")
     optParser.add_option('--cf', help="boolean to use the custom car following model", default=False)
     optParser.add_option('--interval', help="the default interval between cars passing the intersections", default=2)
     optParser.add_option('--maxRandAcc', help="the maximum value of the random acceleration", default=0.04)
@@ -1101,7 +1474,10 @@ if __name__ == "__main__":
 
     elif params["ALGO"] == "FCFS":
         algo = FCFS(RADIUS, PAD, SPEED)
-
+        
+    elif params["ALGO"] == "LQF":
+        algo = LQF(RADIUS, SPEED)
+        
     else:
         algo = Unsupervised()
 
@@ -1111,5 +1487,3 @@ if __name__ == "__main__":
     if TURNING:
         repeatedParameterSweepTurning(algo, INCREMENTS, REPS, int(params["GENCARS"]))
 
-
-    
