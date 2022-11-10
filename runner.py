@@ -81,19 +81,16 @@ def generate_routefile(probs, speed, N, accel, deccel):
         <route id="SW" edges="sc cw" />
         """ % (accel, deccel, speed),file=routes)
         vehNr = 0
-        sc_pre=chr(65+int(vehNr/10))
         # loop through the desired number of timesteps
         for i in range(N):
             if random.uniform(0, 1) < pWE:
-                print('    <vehicle id="%c%i" type="typeCar" route="WE" depart="%f" departSpeed="last"  />' % (
-                    sc_pre, vehNr, 0.5*i), file=routes)
+                print('    <vehicle id="%i" type="typeCar" route="WE" depart="%f" departSpeed="last"  />' % (
+                    vehNr, 0.5*i), file=routes)
                 vehNr += 1
-                sc_pre=chr(65+int(vehNr/10))
             if random.uniform(0, 1) <pSN:
-                print('    <vehicle id="%c%i" type="typeCar" route="SN" depart="%f" departSpeed="last"  color="1,0,0"/>' % (
-                    sc_pre,vehNr, 0.5*i), file=routes)
+                print('    <vehicle id="%i" type="typeCar" route="SN" depart="%f" departSpeed="last"  color="1,0,0"/>' % (
+                    vehNr, 0.5*i), file=routes)
                 vehNr += 1
-                sc_pre=chr(65+int(vehNr/10))
 
             # Choose random directions
             '''
@@ -138,13 +135,7 @@ def generate_routefile(probs, speed, N, accel, deccel):
 # algorithm
 class FCFS(object):
 
-    def __init__(self, radius, pad, topSpeed):
-
-        # the radius of traffic that the algorithm controls
-        self.radius = radius
-
-        # the desired time between cars passing through the same point
-        self.pad = pad
+    def __init__(self, topSpeed):
         # top speed of cars on the road
         self.topSpeed = topSpeed
 
@@ -180,7 +171,6 @@ class FCFS(object):
     #  - modes : a dictionary of cars and the driving function speed modes they should be set to
     def controlNextStep(self, cars, step,vehnum):
         if not cars:
-            init_steps = {}  ## used for recording the initial time step when the car is generated.
             return {}, {}
         speeds = {}
         modes = {}
@@ -343,10 +333,7 @@ class FCFS(object):
 # NB: Does NOT work with turning traffic
 class MSO(object):
 
-    def __init__(self, radius, topSpeed):
-
-        # the radius of traffic that the algorithm controls
-        self.radius = radius
+    def __init__(self, topSpeed):
 
         # top speed of cars on the road
         self.topSpeed = topSpeed
@@ -677,9 +664,7 @@ class MSO(object):
 
 
 class LQF(object):
-    def __init__(self, radius, topSpeed):
-            # the radius of traffic that the algorithm controls
-            self.radius = radius
+    def __init__(self, topSpeed):
             # top speed of cars on the road
             self.topSpeed = topSpeed
             # reference speed of the car
@@ -996,7 +981,7 @@ class LQF(object):
 # NB: Use as a placeholder when testing SUMO defaults
 class Unsupervised(object):
     def __init__(self):
-        self.radius = 0
+        0
 
     def controlNextStep(self, cars, step):
         return {}, {}
@@ -1084,7 +1069,8 @@ def run(vehnum,algo, dataName=""):
 
     step = 0
     # subscribe to get data from the intersection up to the radius of the control algorithm
-    traci.junction.subscribeContext("c", tc.CMD_GET_VEHICLE_VARIABLE, algo.radius, [tc.VAR_LANEPOSITION, tc.VAR_ROAD_ID, tc.VAR_ROUTE_ID, tc.VAR_SPEED])
+    traci.junction.subscribeContext("c", tc.CMD_GET_VEHICLE_VARIABLE,99999, [tc.VAR_LANEPOSITION, tc.VAR_ROAD_ID, tc.VAR_ROUTE_ID, tc.VAR_SPEED])
+    #traci.junction.subscribeContext("c", tc.CMD_GET_VEHICLE_VARIABLE, algo.radius, [tc.VAR_LANEPOSITION, tc.VAR_ROAD_ID, tc.VAR_ROUTE_ID, tc.VAR_SPEED])
     if params["CUSTOM_FOLLOW"]:
         initCars = {}
     # main loop while there are active cars
@@ -1269,8 +1255,8 @@ def repeatedParameterSweepTurning(algo, increment, numRep, numCars, show = True)
 
     for l in range(numRep):
 
-        for i in range(increment+1):
-            for j in range(increment+1):
+        for i in range(10,increment+1):
+            for j in range(10,increment+1):
 
                 print("REP %i, params (%0.3f, %0.3f)" % (l, i / increment, j / increment))
 
@@ -1362,11 +1348,7 @@ if __name__ == "__main__":
 # #########################
 # simulation parameters
 # #########################
-    # the radius of control of the intersection control algorithm
-    RADIUS = 99999
-    # the padding used by the intersection control algorithm
-    # (only applies for FCFS)
-    PAD = 2.0
+
     # the max speed for the cars
     SPEED = 20
     # the max acceleration for the cars
@@ -1420,8 +1402,6 @@ if __name__ == "__main__":
     # save the parameters to a JSON metadata file
 
     params =  {
-        "RADIUS": RADIUS,
-        "PAD": PAD,
         "SPEED": SPEED,
         "ACCEL": ACCEL,
         "DECCEL": DECCEL,
@@ -1443,13 +1423,13 @@ if __name__ == "__main__":
     # and run the correct set of simulations
 
     if params["ALGO"] == "MSO":
-        algo = MSO(RADIUS, SPEED)
+        algo = MSO(SPEED)
 
     elif params["ALGO"] == "FCFS":
-        algo = FCFS(RADIUS, PAD, SPEED)
+        algo = FCFS(SPEED)
 
     elif params["ALGO"] == "LQF":
-        algo = LQF(RADIUS, SPEED)
+        algo = LQF(SPEED)
 
     else:
         algo = Unsupervised()
